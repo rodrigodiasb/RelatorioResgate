@@ -53,6 +53,15 @@ document.addEventListener('DOMContentLoaded', () => {
       textoAdmissao
     ].join('\n');
   }
+    const glasgowSelect = document.getElementById('glasgow');
+if (glasgowSelect) {
+  for (let i = 1; i <= 15; i++) {
+    const option = document.createElement('option');
+    option.value = i;
+    option.textContent = i;
+    glasgowSelect.appendChild(option);
+  }
+}
 
   function renderAvaliacoes() {
     listaAvaliacoes.innerHTML = '';
