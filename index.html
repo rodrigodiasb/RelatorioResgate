@@ -1,92 +1,133 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#007bff" />
-  <link rel="manifest" href="manifest.json" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <title>Avaliação de Vítima</title>
 </head>
 <body>
-  <main>
-    <h1>Avaliação de Vítima</h1>
+  <main class="container my-4">
+    <h1 class="text-primary mb-4">Avaliação de Vítima</h1>
     <form>
-      <section>
-        <label for="nome">Nome</label>
-        <input type="text" id="nome" required />
+      <div class="mb-3">
+        <label for="nome" class="form-label">Nome</label>
+        <input type="text" id="nome" class="form-control" required />
+      </div>
 
-        <label for="documento">CPF ou Documento</label>
-        <input type="text" id="documento" required />
+      <div class="mb-3">
+        <label for="documento" class="form-label">CPF ou Documento</label>
+        <input type="text" id="documento" class="form-control" required />
+      </div>
 
-        <label for="endereco">Endereço</label>
-        <input type="text" id="endereco" required />
-      </section>
+      <div class="mb-3">
+        <label for="endereco" class="form-label">Endereço</label>
+        <input type="text" id="endereco" class="form-control" required />
+      </div>
 
-      <section>
-        <label for="pressao">Pressão Arterial</label>
-        <input type="text" id="pressao" />
-        <label><input type="checkbox" id="prejPressao" /> Prejudicado</label>
+      <div class="mb-3">
+        <label for="protocolo" class="form-label">Protocolo</label>
+        <input type="text" id="protocolo" class="form-control" required />
+      </div>
 
-        <label for="frequencia">Frequência Cardíaca</label>
-        <input type="text" id="frequencia" />
-        <label><input type="checkbox" id="prejFrequencia" /> Prejudicado</label>
+      <div class="mb-3">
+        <label for="pressao" class="form-label">Pressão Arterial</label>
+        <input type="text" id="pressao" class="form-control" />
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="prejPressao">
+          <label class="form-check-label" for="prejPressao">Prejudicado</label>
+        </div>
+      </div>
 
-        <label for="saturacao">Saturação (%)</label>
-        <input type="number" id="saturacao" />
-        <label><input type="checkbox" id="prejSaturacao" /> Prejudicado</label>
+      <div class="mb-3">
+        <label for="frequencia" class="form-label">Frequência Cardíaca</label>
+        <input type="text" id="frequencia" class="form-control" />
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="prejFrequencia">
+          <label class="form-check-label" for="prejFrequencia">Prejudicado</label>
+        </div>
+      </div>
 
-        <label for="respiracao">Movimentos Respiratórios</label>
-        <input type="text" id="respiracao" />
-        <label><input type="checkbox" id="prejRespiracao" /> Prejudicado</label>
+      <div class="mb-3">
+        <label for="saturacao" class="form-label">Saturação (%)</label>
+        <input type="number" id="saturacao" class="form-control" />
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="prejSaturacao">
+          <label class="form-check-label" for="prejSaturacao">Prejudicado</label>
+        </div>
+      </div>
 
-        <label for="glasgow">Glasgow</label>
-        <select id="glasgow">
-          ${[...Array(15)].map((_, i) => `<option value="${i + 1}"></option>`).join('')}
-        </select>
-      </section>
+      <div class="mb-3">
+        <label for="respiracao" class="form-label">Movimentos Respiratórios</label>
+        <input type="text" id="respiracao" class="form-control" />
+        <div class="form-check">
+          <input class="form-check-input" type="checkbox" id="prejRespiracao">
+          <label class="form-check-label" for="prejRespiracao">Prejudicado</label>
+        </div>
+      </div>
 
-      <section>
-        <label for="observacao">Observações</label>
-        <textarea id="observacao"></textarea>
-      </section>
+      <div class="mb-3">
+        <label for="glasgow" class="form-label">Glasgow</label>
+        <select id="glasgow" class="form-select"></select>
+      </div>
 
-      <section>
-        <h2>Regulação</h2>
-        <label for="medicoRegulador">Médico Regulador</label>
-        <input type="text" id="medicoRegulador" />
+      <div class="mb-3">
+        <label for="observacao" class="form-label">Observações</label>
+        <textarea id="observacao" class="form-control"></textarea>
+      </div>
 
-        <label for="senha">Senha</label>
-        <input type="text" id="senha" />
+      <h2 class="text-primary">Regulação</h2>
 
-        <label for="unidadeSaude">Unidade de Saúde</label>
-        <input type="text" id="unidadeSaude" />
-      </section>
+      <div class="mb-3">
+        <label for="medicoRegulador" class="form-label">Médico Regulador</label>
+        <input type="text" id="medicoRegulador" class="form-control" />
+      </div>
 
-      <section>
-        <h2>Admissão</h2>
-        <label><input type="radio" name="referenciaAdmissao" value="Dr." /> Dr.</label>
-        <label><input type="radio" name="referenciaAdmissao" value="Enf." /> Enf.</label>
+      <div class="mb-3">
+        <label for="senha" class="form-label">Senha</label>
+        <input type="text" id="senha" class="form-control" />
+      </div>
 
-        <label for="nomeAdmitiu">Nome</label>
-        <input type="text" id="nomeAdmitiu" />
+      <div class="mb-3">
+        <label for="unidadeSaude" class="form-label">Unidade de Saúde</label>
+        <input type="text" id="unidadeSaude" class="form-control" />
+      </div>
 
-<label>
-  <input type="checkbox" id="macaRetirada" />
-  Maca Retirada
-</label>
-      </section>
+      <h2 class="text-primary">Admissão</h2>
 
-      <button type="submit">Salvar Avaliação</button>
+      <div class="mb-3">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="referenciaAdmissao" value="Dr." id="dr">
+          <label class="form-check-label" for="dr">Dr.</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="referenciaAdmissao" value="Enf." id="enf">
+          <label class="form-check-label" for="enf">Enf.</label>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="nomeAdmitiu" class="form-label">Nome</label>
+        <input type="text" id="nomeAdmitiu" class="form-control" />
+      </div>
+
+      <div class="form-check mb-3">
+        <input class="form-check-input" type="checkbox" id="macaRetirada">
+        <label class="form-check-label" for="macaRetirada">Maca Retirada</label>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Salvar Avaliação</button>
     </form>
 
-    <div id="mensagem-sucesso" class="oculto">Salvo com sucesso!</div>
+    <div id="mensagem-sucesso" class="text-success mt-3 oculto">Salvo com sucesso!</div>
 
-    <input type="text" id="pesquisa" placeholder="Pesquisar por nome..." />
-    <ul id="lista-avaliacoes"></ul>
+    <input type="text" id="pesquisa" placeholder="Pesquisar por nome..." class="form-control my-3" />
+    <ul id="lista-avaliacoes" class="list-group"></ul>
   </main>
 
   <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
