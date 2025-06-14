@@ -18,21 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function limparFormulario() {
     form.reset();
-    delete form.dataset.editando;
-  }
-
-  function formatarCPF(valor) {
-    const numeros = valor.replace(/\D/g, '');
-    if (numeros.length === 11) {
-      return numeros.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
-    }
-    return valor;
   }
 
   function montarTextoAvaliacao(dados) {
     const getCampo = (campo, sufixo = '', prejudicado = false) => {
       return prejudicado ? `${campo}: prejudicado` : `${campo}: ${dados[campo] || ''}${sufixo}`;
     };
+
+    const admissao = dados.macaRetirada
+      ? `Vítima admitida aos cuidados do ${dados.referenciaAdmissao || ''} ${dados.nomeAdmitiu || ''} e a maca foi retirada pelo mesmo(a) às ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+      : `Vítima admitida aos cuidados do ${dados.referenciaAdmissao || ''} ${dados.nomeAdmitiu || ''}`;
 
     return [
       `Nome: ${dados.nome || ''}`,
@@ -51,18 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
       `Senha: ${dados.senha || ''}`,
       `Unidade de Saúde: ${dados.unidadeSaude || ''}`,
       '',
-      `Vítima admitida aos cuidados do ${dados.referenciaAdmissao || ''} ${dados.nomeAdmitiu || ''}`
+      admissao
     ].join('\n');
   }
-  const glasgowSelect = document.getElementById('glasgow');
-if (glasgowSelect) {
-  for (let i = 1; i <= 15; i++) {
-    const option = document.createElement('option');
-    option.value = i;
-    option.textContent = i;
-    glasgowSelect.appendChild(option);
-  }
-}
 
   function renderAvaliacoes() {
     listaAvaliacoes.innerHTML = '';
@@ -84,16 +70,7 @@ if (glasgowSelect) {
     const dados = avaliacoes[index];
     for (const key in dados) {
       const el = document.getElementById(key);
-      if (el) {
-        if (el.type === 'checkbox') {
-          el.checked = dados[key];
-        } else if (el.type === 'radio') {
-          const radio = document.querySelector(`input[name="${el.name}"][value="${dados[key]}"]`);
-          if (radio) radio.checked = true;
-        } else {
-          el.value = dados[key];
-        }
-      }
+      if (el) el.type === 'checkbox' ? el.checked = dados[key] : el.value = dados[key];
     }
     form.dataset.editando = index;
   };
@@ -110,25 +87,6 @@ if (glasgowSelect) {
       renderAvaliacoes();
     }
   };
-
-  getInput('documento').addEventListener('blur', () => {
-    const input = getInput('documento');
-    input.value = formatarCPF(input.value);
-  });
-
-  const prejudicadoCheckBoxes = ['prejPressao', 'prejFrequencia', 'prejSaturacao', 'prejRespiracao'];
-  prejudicadoCheckBoxes.forEach(id => {
-    document.getElementById(id).addEventListener('change', e => {
-      const inputRelacionado = id.replace('prej', '').toLowerCase();
-      const campo = getInput(inputRelacionado);
-      if (e.target.checked) {
-        campo.disabled = true;
-        campo.value = '';
-      } else {
-        campo.disabled = false;
-      }
-    });
-  });
 
   form.addEventListener('submit', e => {
     e.preventDefault();
@@ -147,6 +105,7 @@ if (glasgowSelect) {
       unidadeSaude: getInput('unidadeSaude').value,
       referenciaAdmissao: getRadioValue('referenciaAdmissao'),
       nomeAdmitiu: getInput('nomeAdmitiu').value,
+      macaRetirada: getCheckbox('macaRetirada'),
       prejPressao: getCheckbox('prejPressao'),
       prejFrequencia: getCheckbox('prejFrequencia'),
       prejSaturacao: getCheckbox('prejSaturacao'),
@@ -155,6 +114,7 @@ if (glasgowSelect) {
 
     if (form.dataset.editando) {
       avaliacoes[form.dataset.editando] = dados;
+      delete form.dataset.editando;
     } else {
       avaliacoes.push(dados);
     }
