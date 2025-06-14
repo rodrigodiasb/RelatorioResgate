@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `Nome: ${dados.nome || ''}`,
       `Documento: ${dados.documento || ''}`,
       `Endereço: ${dados.endereco || ''}`,
+      `Protocolo: ${dados.protocolo || ''}`,
       '',
       getCampo('pressao', '', dados.prejPressao),
       getCampo('frequencia', '', dados.prejFrequencia),
