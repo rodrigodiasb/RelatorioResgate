@@ -1,5 +1,3 @@
-// script.js
-
 document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('form');
   const listaAvaliacoes = document.getElementById('lista-avaliacoes');
@@ -37,6 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `Nome: ${dados.nome || ''}`,
       `Documento: ${dados.documento || ''}`,
       `Endereço: ${dados.endereco || ''}`,
+      `Protocolo: ${dados.protocolo || ''}`,
       '',
       getCampo('pressao', '', dados.prejPressao),
       getCampo('frequencia', '', dados.prejFrequencia),
@@ -53,15 +52,16 @@ document.addEventListener('DOMContentLoaded', () => {
       textoAdmissao
     ].join('\n');
   }
-    const glasgowSelect = document.getElementById('glasgow');
-if (glasgowSelect) {
-  for (let i = 1; i <= 15; i++) {
-    const option = document.createElement('option');
-    option.value = i;
-    option.textContent = i;
-    glasgowSelect.appendChild(option);
+
+  const glasgowSelect = document.getElementById('glasgow');
+  if (glasgowSelect) {
+    for (let i = 1; i <= 15; i++) {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = i;
+      glasgowSelect.appendChild(option);
+    }
   }
-}
 
   function renderAvaliacoes() {
     listaAvaliacoes.innerHTML = '';
@@ -69,11 +69,12 @@ if (glasgowSelect) {
 
     avaliacoes.filter(av => av.nome.toLowerCase().includes(termo)).forEach((dados, index) => {
       const li = document.createElement('li');
+      li.className = 'list-group-item';
       li.innerHTML = `
         <strong>${dados.nome}</strong><br>
-        <button onclick="editar(${index})">Editar</button>
-        <button onclick="copiar(${index})">Copiar Avaliação</button>
-        <button onclick="excluir(${index})">Excluir</button>
+        <button class="btn btn-sm btn-secondary me-2 mt-2" onclick="editar(${index})">Editar</button>
+        <button class="btn btn-sm btn-success me-2 mt-2" onclick="copiar(${index})">Copiar Avaliação</button>
+        <button class="btn btn-sm btn-danger mt-2" onclick="excluir(${index})">Excluir</button>
       `;
       listaAvaliacoes.appendChild(li);
     });
@@ -112,6 +113,7 @@ if (glasgowSelect) {
       nome: getInput('nome').value,
       documento: getInput('documento').value,
       endereco: getInput('endereco').value,
+      protocolo: getInput('protocolo').value,
       pressao: getInput('pressao').value,
       frequencia: getInput('frequencia').value,
       saturacao: getInput('saturacao').value,
