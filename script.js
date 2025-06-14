@@ -112,6 +112,7 @@ if (glasgowSelect) {
       nome: getInput('nome').value,
       documento: getInput('documento').value,
       endereco: getInput('endereco').value,
+      protocolo: getInput('protocolo').value,
       pressao: getInput('pressao').value,
       frequencia: getInput('frequencia').value,
       saturacao: getInput('saturacao').value,
