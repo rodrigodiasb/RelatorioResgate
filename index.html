@@ -1,0 +1,87 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#007bff" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Avaliação de Vítima</title>
+</head>
+<body>
+  <main>
+    <h1>Avaliação de Vítima</h1>
+    <form>
+      <section>
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" required />
+
+        <label for="documento">CPF ou Documento</label>
+        <input type="text" id="documento" required />
+
+        <label for="endereco">Endereço</label>
+        <input type="text" id="endereco" required />
+      </section>
+
+      <section>
+        <label for="pressao">Pressão Arterial</label>
+        <input type="text" id="pressao" />
+        <label><input type="checkbox" id="prejPressao" /> Prejudicado</label>
+
+        <label for="frequencia">Frequência Cardíaca</label>
+        <input type="text" id="frequencia" />
+        <label><input type="checkbox" id="prejFrequencia" /> Prejudicado</label>
+
+        <label for="saturacao">Saturação (%)</label>
+        <input type="number" id="saturacao" />
+        <label><input type="checkbox" id="prejSaturacao" /> Prejudicado</label>
+
+        <label for="respiracao">Movimentos Respiratórios</label>
+        <input type="text" id="respiracao" />
+        <label><input type="checkbox" id="prejRespiracao" /> Prejudicado</label>
+
+        <label for="glasgow">Glasgow</label>
+        <select id="glasgow">
+          ${[...Array(15)].map((_, i) => `<option value="${i + 1}">${i + 1}</option>`).join('')}
+        </select>
+      </section>
+
+      <section>
+        <label for="observacao">Observações</label>
+        <textarea id="observacao"></textarea>
+      </section>
+
+      <section>
+        <h2>Regulação</h2>
+        <label for="medicoRegulador">Médico Regulador</label>
+        <input type="text" id="medicoRegulador" />
+
+        <label for="senha">Senha</label>
+        <input type="text" id="senha" />
+
+        <label for="unidadeSaude">Unidade de Saúde</label>
+        <input type="text" id="unidadeSaude" />
+      </section>
+
+      <section>
+        <h2>Admissão</h2>
+        <label><input type="radio" name="referenciaAdmissao" value="Dr." /> Dr.</label>
+        <label><input type="radio" name="referenciaAdmissao" value="Enf." /> Enf.</label>
+
+        <label for="nomeAdmitiu">Nome</label>
+        <input type="text" id="nomeAdmitiu" />
+      </section>
+
+      <button type="submit">Salvar Avaliação</button>
+    </form>
+
+    <div id="mensagem-sucesso" class="oculto">Salvo com sucesso!</div>
+
+    <input type="text" id="pesquisa" placeholder="Pesquisar por nome..." />
+    <ul id="lista-avaliacoes"></ul>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
