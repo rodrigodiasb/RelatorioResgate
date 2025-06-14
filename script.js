@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const getInput = id => document.getElementById(id);
   const getCheckbox = id => document.getElementById(id).checked;
   const getRadioValue = name => document.querySelector(`input[name="${name}"]:checked`)?.value || '';
+  const setRadioValue = (name, value) => {
+    const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
+    if (radio) radio.checked = true;
+  };
 
   let avaliacoes = JSON.parse(localStorage.getItem('avaliacoes')) || [];
 
@@ -25,8 +29,8 @@ document.addEventListener('DOMContentLoaded', () => {
       return prejudicado ? `${campo}: prejudicado` : `${campo}: ${dados[campo] || ''}${sufixo}`;
     };
 
-    const admissao = dados.macaRetirada
-      ? `Vítima admitida aos cuidados do ${dados.referenciaAdmissao || ''} ${dados.nomeAdmitiu || ''} e a maca foi retirada pelo mesmo(a) às ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+    const textoAdmissao = dados.macaRetirada
+      ? `Vítima admitida aos cuidados do ${dados.referenciaAdmissao || ''} ${dados.nomeAdmitiu || ''} e a maca foi retirada pelo mesmo(a) às ${new Date().toLocaleTimeString()}`
       : `Vítima admitida aos cuidados do ${dados.referenciaAdmissao || ''} ${dados.nomeAdmitiu || ''}`;
 
     return [
@@ -46,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
       `Senha: ${dados.senha || ''}`,
       `Unidade de Saúde: ${dados.unidadeSaude || ''}`,
       '',
-      admissao
+      textoAdmissao
     ].join('\n');
   }
 
@@ -70,8 +74,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const dados = avaliacoes[index];
     for (const key in dados) {
       const el = document.getElementById(key);
-      if (el) el.type === 'checkbox' ? el.checked = dados[key] : el.value = dados[key];
+      if (el && key !== 'referenciaAdmissao') el.value = dados[key];
+      if (key.startsWith('prej') && document.getElementById(key)) {
+        document.getElementById(key).checked = dados[key];
+      }
     }
+    setRadioValue('referenciaAdmissao', dados.referenciaAdmissao);
+    getInput('macaRetirada').checked = dados.macaRetirada || false;
     form.dataset.editando = index;
   };
 
