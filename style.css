@@ -1,4 +1,3 @@
-/* style.css */
 body {
   font-family: sans-serif;
   margin: 0;
@@ -6,76 +5,10 @@ body {
   background: #f2f2f2;
 }
 
-main {
-  max-width: 600px;
-  margin: auto;
-  padding: 1rem;
-  background: white;
-  border-radius: 8px;
-}
-
-h1, h2 {
-  color: #007bff;
-}
-
-form section {
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 1rem;
-}
-
-label {
-  display: block;
-  margin-top: 0.5rem;
-  font-weight: bold;
-  font-size: 0.9rem;
-}
-
-input, select, textarea, button {
-  width: 100%;
-  padding: 0.5rem;
-  margin-top: 0.25rem;
-  box-sizing: border-box;
-  font-size: 1rem;
-}
-
-button {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #0056b3;
-}
-
 #mensagem-sucesso {
-  color: green;
-  margin: 1rem 0;
   display: none;
 }
 
 #mensagem-sucesso:not(.oculto) {
   display: block;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  background: #f9f9f9;
-  margin-bottom: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 4px;
-}
-
-li button {
-  margin-top: 0.5rem;
-  display: inline-block;
-  width: auto;
-  margin-right: 0.5rem;
 }
