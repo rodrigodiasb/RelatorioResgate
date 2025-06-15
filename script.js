@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Máscara CPF
+  // Máscara para CPF
   getInput('documento').addEventListener('input', function () {
     let v = this.value.replace(/\D/g, '');
     if (v.length <= 11) {
@@ -73,6 +73,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     this.value = v;
   });
+
+  // Vincular checkbox 'Prej.' para desabilitar campos
+  function configurarCheckboxDesabilitaCampo(campoId, checkboxId) {
+    const campo = document.getElementById(campoId);
+    const checkbox = document.getElementById(checkboxId);
+
+    if (campo && checkbox) {
+      checkbox.addEventListener('change', () => {
+        campo.disabled = checkbox.checked;
+      });
+      campo.disabled = checkbox.checked; // Estado inicial
+    }
+  }
+
+  configurarCheckboxDesabilitaCampo('pressao', 'prejPressao');
+  configurarCheckboxDesabilitaCampo('frequencia', 'prejFrequencia');
+  configurarCheckboxDesabilitaCampo('saturacao', 'prejSaturacao');
+  configurarCheckboxDesabilitaCampo('respiracao', 'prejRespiracao');
 
   function renderAvaliacoes() {
     listaAvaliacoes.innerHTML = '';
@@ -86,6 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <small class="text-muted">${dados.endereco || ''} - Protocolo: ${dados.protocolo || ''}</small><br>
         <button class="btn btn-sm btn-secondary me-2 mt-2" onclick="editar(${index})">Editar</button>
         <button class="btn btn-sm btn-success me-2 mt-2" onclick="copiar(${index})">Copiar Avaliação</button>
+        <button class="btn btn-sm btn-info me-2 mt-2" onclick="visualizar(${index})">Visualizar</button>
         <button class="btn btn-sm btn-danger mt-2" onclick="excluir(${index})">Excluir</button>
       `;
       listaAvaliacoes.appendChild(li);
@@ -117,6 +136,11 @@ document.addEventListener('DOMContentLoaded', () => {
       salvarLocalStorage();
       renderAvaliacoes();
     }
+  };
+
+  window.visualizar = index => {
+    localStorage.setItem('avaliacao_visualizar', JSON.stringify(avaliacoes[index]));
+    window.open('visualizar.html', '_blank');
   };
 
   form.addEventListener('submit', e => {
