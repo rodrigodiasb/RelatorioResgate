@@ -1,4 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
+getInput('documento').addEventListener('input', function () {
+  let v = this.value.replace(/\D/g, '');
+  if (v.length <= 11) {
+    v = v.replace(/(\d{3})(\d)/, '$1.$2');
+    v = v.replace(/(\d{3})(\d)/, '$1.$2');
+    v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+  }
+  this.value = v;
+});
   const form = document.querySelector('form');
   const listaAvaliacoes = document.getElementById('lista-avaliacoes');
   const mensagemSucesso = document.getElementById('mensagem-sucesso');
