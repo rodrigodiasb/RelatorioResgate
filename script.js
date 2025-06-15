@@ -1,13 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-getInput('documento').addEventListener('input', function () {
-  let v = this.value.replace(/\D/g, '');
-  if (v.length <= 11) {
-    v = v.replace(/(\d{3})(\d)/, '$1.$2');
-    v = v.replace(/(\d{3})(\d)/, '$1.$2');
-    v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-  }
-  this.value = v;
-});
   const form = document.querySelector('form');
   const listaAvaliacoes = document.getElementById('lista-avaliacoes');
   const mensagemSucesso = document.getElementById('mensagem-sucesso');
@@ -46,10 +37,10 @@ getInput('documento').addEventListener('input', function () {
       `Endereço: ${dados.endereco || ''}`,
       `Protocolo: ${dados.protocolo || ''}`,
       '',
-getCampo('pressao', ' mmHg', dados.prejPressao),
-getCampo('frequencia', ' bpm', dados.prejFrequencia),
-getCampo('saturacao', ' %', dados.prejSaturacao),
-getCampo('respiracao', ' mrm', dados.prejRespiracao),
+      getCampo('pressao', ' mmHg', dados.prejPressao),
+      getCampo('frequencia', ' bpm', dados.prejFrequencia),
+      getCampo('saturacao', ' %', dados.prejSaturacao),
+      getCampo('respiracao', ' mrm', dados.prejRespiracao),
       `Glasgow: ${dados.glasgow || ''}`,
       '',
       `Observações: ${dados.observacao || ''}`,
@@ -72,6 +63,17 @@ getCampo('respiracao', ' mrm', dados.prejRespiracao),
     }
   }
 
+  // Máscara CPF
+  getInput('documento').addEventListener('input', function () {
+    let v = this.value.replace(/\D/g, '');
+    if (v.length <= 11) {
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+    }
+    this.value = v;
+  });
+
   function renderAvaliacoes() {
     listaAvaliacoes.innerHTML = '';
     const termo = campoPesquisa.value.toLowerCase();
@@ -81,6 +83,7 @@ getCampo('respiracao', ' mrm', dados.prejRespiracao),
       li.className = 'list-group-item';
       li.innerHTML = `
         <strong>${dados.nome}</strong><br>
+        <small class="text-muted">${dados.endereco || ''} - Protocolo: ${dados.protocolo || ''}</small><br>
         <button class="btn btn-sm btn-secondary me-2 mt-2" onclick="editar(${index})">Editar</button>
         <button class="btn btn-sm btn-success me-2 mt-2" onclick="copiar(${index})">Copiar Avaliação</button>
         <button class="btn btn-sm btn-danger mt-2" onclick="excluir(${index})">Excluir</button>
