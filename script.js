@@ -123,6 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setRadioValue('referenciaAdmissao', dados.referenciaAdmissao);
     getInput('macaRetirada').checked = dados.macaRetirada || false;
     form.dataset.editando = index;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   window.copiar = index => {
