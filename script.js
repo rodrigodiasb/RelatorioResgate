@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return [
       `Nome: ${dados.nome || ''}`,
       `Documento: ${dados.documento || ''}`,
+      `Idade: ${dados.idade || ''}`,
       `Endereço: ${dados.endereco || ''}`,
       `Protocolo: ${dados.protocolo || ''}`,
       '',
@@ -119,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (key.startsWith('prej') && document.getElementById(key)) {
         document.getElementById(key).checked = dados[key];
       }
+      if (key === 'idade' && el) el.value = dados[key];
     }
     setRadioValue('referenciaAdmissao', dados.referenciaAdmissao);
     getInput('macaRetirada').checked = dados.macaRetirada || false;
@@ -149,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dados = {
       nome: getInput('nome').value,
       documento: getInput('documento').value,
+      idade: getInput('idade').value,
       endereco: getInput('endereco').value,
       protocolo: getInput('protocolo').value,
       pressao: getInput('pressao').value,
