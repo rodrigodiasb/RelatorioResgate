@@ -11,6 +11,26 @@ document.addEventListener('DOMContentLoaded', () => {
     const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
     if (radio) radio.checked = true;
   };
+  
+  // Conversor de Data de Nascimento -> Idade
+const campoIdade = document.getElementById('idade');
+const campoDataNascimento = document.getElementById('dataNascimento');
+
+if (campoIdade && campoDataNascimento) {
+  campoDataNascimento.addEventListener('change', () => {
+    const dataNasc = new Date(campoDataNascimento.value);
+    if (!isNaN(dataNasc)) {
+      const hoje = new Date();
+      let idade = hoje.getFullYear() - dataNasc.getFullYear();
+      const m = hoje.getMonth() - dataNasc.getMonth();
+      if (m < 0 || (m === 0 && hoje.getDate() < dataNasc.getDate())) {
+        idade--;
+      }
+      campoIdade.value = idade;
+    }
+  });
+}
+  
 
   let avaliacoes = JSON.parse(localStorage.getItem('avaliacoes')) || [];
 
@@ -156,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
       nome: getInput('nome').value,
       documento: getInput('documento').value,
       idade: getInput('idade').value,
+dataNascimento: getInput('dataNascimento').value,
       endereco: getInput('endereco').value,
       protocolo: getInput('protocolo').value,
       pressao: getInput('pressao').value,
