@@ -97,19 +97,23 @@ document.addEventListener('DOMContentLoaded', () => {
     listaAvaliacoes.innerHTML = '';
     const termo = campoPesquisa.value.toLowerCase();
 
-    avaliacoes.filter(av => av.nome.toLowerCase().includes(termo)).forEach((dados, index) => {
-      const li = document.createElement('li');
-      li.className = 'list-group-item';
-      li.innerHTML = `
-        <strong>${dados.nome}</strong><br>
-        <small class="text-muted">${dados.endereco || ''} - Protocolo: ${dados.protocolo || ''}</small><br>
-        <button class="btn btn-sm btn-secondary me-2 mt-2" onclick="editar(${index})">Editar</button>
-        <button class="btn btn-sm btn-success me-2 mt-2" onclick="copiar(${index})">Copiar Avaliação</button>
-        <button class="btn btn-sm btn-info me-2 mt-2" onclick="visualizar(${index})">Visualizar</button>
-        <button class="btn btn-sm btn-danger mt-2" onclick="excluir(${index})">Excluir</button>
-      `;
-      listaAvaliacoes.appendChild(li);
-    });
+    avaliacoes
+  .map((av, idx) => ({ av, idx }))        // mantém índice original
+  .filter(obj => obj.av.nome.toLowerCase().includes(termo))
+  .reverse()                              // inverte a ordem
+  .forEach(({ av, idx }) => {
+    const li = document.createElement('li');
+    li.className = 'list-group-item';
+    li.innerHTML = `
+      <strong>${av.nome}</strong><br>
+      <small class="text-muted">${av.endereco || ''} - Protocolo: ${av.protocolo || ''}</small><br>
+      <button class="btn btn-sm btn-secondary me-2 mt-2" onclick="editar(${idx})">Editar</button>
+      <button class="btn btn-sm btn-success me-2 mt-2" onclick="copiar(${idx})">Copiar Avaliação</button>
+      <button class="btn btn-sm btn-info me-2 mt-2" onclick="visualizar(${idx})">Visualizar</button>
+      <button class="btn btn-sm btn-danger mt-2" onclick="excluir(${idx})">Excluir</button>
+    `;
+    listaAvaliacoes.appendChild(li);
+  });
   }
 
   window.editar = index => {
