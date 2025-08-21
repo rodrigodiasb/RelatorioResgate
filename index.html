@@ -11,7 +11,7 @@
 <body>
   <main class="container my-4">
     <h1 class="text-primary mb-4">Avaliação de Vítima</h1>
-    <form>
+    <form id="form-avaliacao">
 
       <h4 class="mt-4">Dados Pessoais</h4>
       <div class="row g-3">
@@ -21,22 +21,8 @@
         </div>
         <div class="col-md-6">
           <label for="documento" class="form-label">CPF ou Documento</label>
-         <input 
-  type="tel" 
-  id="documento" 
-  class="form-control" 
-  inputmode="numeric" 
-  pattern="[0-9]*" 
-  required 
-/>
+          <input type="tel" id="documento" class="form-control" inputmode="numeric" pattern="[0-9]*" required />
         </div>
-<div class="col-md-6">
-  <label for="idade" class="form-label">Idade</label>
-  <div class="input-group">
-    <input type="number" id="idade" class="form-control" placeholder="Idade" />
-    <input type="date" id="dataNascimento" class="form-control" />
-  </div>
-</div>
         <div class="col-md-6">
           <label for="endereco" class="form-label">Endereço</label>
           <input type="text" id="endereco" class="form-control" required />
@@ -44,6 +30,13 @@
         <div class="col-md-6">
           <label for="protocolo" class="form-label">Protocolo</label>
           <input type="text" id="protocolo" class="form-control" required />
+        </div>
+        <div class="col-md-6">
+          <label for="idade" class="form-label">Idade</label>
+          <div class="input-group">
+            <input type="number" id="idade" class="form-control" placeholder="Idade" />
+            <input type="date" id="dataNascimento" class="form-control" />
+          </div>
         </div>
       </div>
 
@@ -141,6 +134,7 @@
     <ul id="lista-avaliacoes" class="list-group"></ul>
   </main>
 
+  <script src="https://apis.google.com/js/api.js"></script>
   <script src="script.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>

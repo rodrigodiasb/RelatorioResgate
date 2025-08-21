@@ -1,216 +1,85 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const form = document.querySelector('form');
-  const listaAvaliacoes = document.getElementById('lista-avaliacoes');
-  const mensagemSucesso = document.getElementById('mensagem-sucesso');
-  const campoPesquisa = document.getElementById('pesquisa');
+const API_KEY   = 'AIzaSyAPhG1cgx3lbGRQ-dFfJbOeln0K9gp2zJI';
+const CLIENT_ID = '346882138198-7m77ofqusaqkkpi6ugoc0mual6ku3ior.apps.googleusercontent.com';
+const SHEET_ID  = '1U0jqytxXBRhT9cWaJCOIdlMTKsQhSWibsY6EyQm7qnk';
+const SHEET_NAME = 'Avaliacoes';
 
-  const getInput = id => document.getElementById(id);
-  const getCheckbox = id => document.getElementById(id).checked;
-  const getRadioValue = name => document.querySelector(`input[name="${name}"]:checked`)?.value || '';
-  const setRadioValue = (name, value) => {
-    const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
-    if (radio) radio.checked = true;
-  };
-  
-  // Conversor de Data de Nascimento -> Idade
-const campoIdade = document.getElementById('idade');
-const campoDataNascimento = document.getElementById('dataNascimento');
+const SCOPES = 'https://www.googleapis.com/auth/spreadsheets';
+let gapiInited = false;
+let gisInited = false;
 
-if (campoIdade && campoDataNascimento) {
-  campoDataNascimento.addEventListener('change', () => {
-    const dataNasc = new Date(campoDataNascimento.value);
-    if (!isNaN(dataNasc)) {
-      const hoje = new Date();
-      let idade = hoje.getFullYear() - dataNasc.getFullYear();
-      const m = hoje.getMonth() - dataNasc.getMonth();
-      if (m < 0 || (m === 0 && hoje.getDate() < dataNasc.getDate())) {
-        idade--;
-      }
-      campoIdade.value = idade;
-    }
-  });
+function gapiLoaded() {
+  gapi.load('client:auth2', initClient);
 }
-  
 
-  let avaliacoes = JSON.parse(localStorage.getItem('avaliacoes')) || [];
-
-  function salvarLocalStorage() {
-    localStorage.setItem('avaliacoes', JSON.stringify(avaliacoes));
+async function initClient() {
+  await gapi.client.init({
+    apiKey: API_KEY,
+    clientId: CLIENT_ID,
+    discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+    scope: SCOPES,
+  });
+  if (!gapi.auth2.getAuthInstance().isSignedIn.get()) {
+    await gapi.auth2.getAuthInstance().signIn();
   }
+  listarAvaliacoes();
+}
 
-  function limparFormulario() {
-    form.reset();
-  }
+// Salvar Avaliação
+document.getElementById('form-avaliacao').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const dados = {
+    nome: document.getElementById('nome').value,
+    documento: document.getElementById('documento').value,
+    endereco: document.getElementById('endereco').value,
+    protocolo: document.getElementById('protocolo').value,
+    idade: document.getElementById('idade').value,
+    dataNascimento: document.getElementById('dataNascimento').value,
+    pressao: document.getElementById('pressao').value,
+    frequencia: document.getElementById('frequencia').value,
+    saturacao: document.getElementById('saturacao').value,
+    respiracao: document.getElementById('respiracao').value,
+    glasgow: document.getElementById('glasgow').value,
+    observacao: document.getElementById('observacao').value,
+    medicoRegulador: document.getElementById('medicoRegulador').value,
+    senha: document.getElementById('senha').value,
+    unidadeSaude: document.getElementById('unidadeSaude').value,
+    referenciaAdmissao: document.querySelector('input[name="referenciaAdmissao"]:checked')?.value || '',
+    nomeAdmitiu: document.getElementById('nomeAdmitiu').value,
+    macaRetirada: document.getElementById('macaRetirada').checked ? 'Sim' : 'Não'
+  };
 
-  function montarTextoAvaliacao(dados) {
-    const getCampo = (campo, sufixo = '', prejudicado = false) => {
-      return prejudicado ? `${campo}: prejudicado` : `${campo}: ${dados[campo] || ''}${sufixo}`;
-    };
-
-    const textoAdmissao = dados.macaRetirada
-      ? `Vítima admitida aos cuidados do ${dados.referenciaAdmissao || ''} ${dados.nomeAdmitiu || ''} e a maca foi retirada pelo mesmo(a) às ${new Date().toLocaleTimeString()}`
-      : `Vítima admitida aos cuidados do ${dados.referenciaAdmissao || ''} ${dados.nomeAdmitiu || ''}`;
-
-    return [
-      `Nome: ${dados.nome || ''}`,
-      `Documento: ${dados.documento || ''}`,
-      `Idade: ${dados.idade || ''}`,
-      `Endereço: ${dados.endereco || ''}`,
-      `Protocolo: ${dados.protocolo || ''}`,
-      '',
-      getCampo('pressao', ' mmHg', dados.prejPressao),
-      getCampo('frequencia', ' bpm', dados.prejFrequencia),
-      getCampo('saturacao', ' %', dados.prejSaturacao),
-      getCampo('respiracao', ' mrm', dados.prejRespiracao),
-      `Glasgow: ${dados.glasgow || ''}`,
-      '',
-      `Observações: ${dados.observacao || ''}`,
-      '',
-      `Médico regulador: ${dados.medicoRegulador || ''}`,
-      `Senha: ${dados.senha || ''}`,
-      `Unidade de Saúde: ${dados.unidadeSaude || ''}`,
-      '',
-      textoAdmissao
-    ].join('\n');
-  }
-
-  const glasgowSelect = document.getElementById('glasgow');
-  if (glasgowSelect) {
-    for (let i = 1; i <= 15; i++) {
-      const option = document.createElement('option');
-      option.value = i;
-      option.textContent = i;
-      glasgowSelect.appendChild(option);
-    }
-  }
-
-  // Máscara para CPF
-  getInput('documento').addEventListener('input', function () {
-    let v = this.value.replace(/\D/g, '');
-    if (v.length <= 11) {
-      v = v.replace(/(\d{3})(\d)/, '$1.$2');
-      v = v.replace(/(\d{3})(\d)/, '$1.$2');
-      v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-    }
-    this.value = v;
+  await gapi.client.sheets.spreadsheets.values.append({
+    spreadsheetId: SHEET_ID,
+    range: SHEET_NAME,
+    valueInputOption: 'RAW',
+    insertDataOption: 'INSERT_ROWS',
+    resource: { values: [Object.values(dados)] }
   });
 
-  // Vincular checkbox 'Prej.' para desabilitar campos
-  function configurarCheckboxDesabilitaCampo(campoId, checkboxId) {
-    const campo = document.getElementById(campoId);
-    const checkbox = document.getElementById(checkboxId);
+  document.getElementById('mensagem-sucesso').classList.remove('oculto');
+  listarAvaliacoes();
+});
 
-    if (campo && checkbox) {
-      checkbox.addEventListener('change', () => {
-        campo.disabled = checkbox.checked;
-      });
-      campo.disabled = checkbox.checked; // Estado inicial
-    }
-  }
+// Listar Avaliações
+async function listarAvaliacoes() {
+  const response = await gapi.client.sheets.spreadsheets.values.get({
+    spreadsheetId: SHEET_ID,
+    range: SHEET_NAME
+  });
 
-  configurarCheckboxDesabilitaCampo('pressao', 'prejPressao');
-  configurarCheckboxDesabilitaCampo('frequencia', 'prejFrequencia');
-  configurarCheckboxDesabilitaCampo('saturacao', 'prejSaturacao');
-  configurarCheckboxDesabilitaCampo('respiracao', 'prejRespiracao');
+  const listaAvaliacoes = document.getElementById('lista-avaliacoes');
+  listaAvaliacoes.innerHTML = '';
 
-  function renderAvaliacoes() {
-    listaAvaliacoes.innerHTML = '';
-    const termo = campoPesquisa.value.toLowerCase();
+  const values = response.result.values;
+  if (!values || values.length === 0) return;
 
-    avaliacoes
-  .map((av, idx) => ({ av, idx }))        // mantém índice original
-  .filter(obj => obj.av.nome.toLowerCase().includes(termo))
-  .reverse()                              // inverte a ordem
-  .forEach(({ av, idx }) => {
+  values.slice(1).reverse().forEach((row, index) => {
     const li = document.createElement('li');
     li.className = 'list-group-item';
     li.innerHTML = `
-      <strong>${av.nome}</strong><br>
-      <small class="text-muted">${av.endereco || ''} - Protocolo: ${av.protocolo || ''}</small><br>
-      <button class="btn btn-sm btn-secondary me-2 mt-2" onclick="editar(${idx})">Editar</button>
-      <button class="btn btn-sm btn-success me-2 mt-2" onclick="copiar(${idx})">Copiar Avaliação</button>
-      <button class="btn btn-sm btn-info me-2 mt-2" onclick="visualizar(${idx})">Visualizar</button>
-      <button class="btn btn-sm btn-danger mt-2" onclick="excluir(${idx})">Excluir</button>
+      <strong>${row[0]}</strong><br>
+      <small class="text-muted">${row[2] || ''} - Protocolo: ${row[3] || ''}</small><br>
     `;
     listaAvaliacoes.appendChild(li);
   });
-  }
-
-  window.editar = index => {
-    const dados = avaliacoes[index];
-    for (const key in dados) {
-      const el = document.getElementById(key);
-      if (el && key !== 'referenciaAdmissao') el.value = dados[key];
-      if (key.startsWith('prej') && document.getElementById(key)) {
-        document.getElementById(key).checked = dados[key];
-      }
-      if (key === 'idade' && el) el.value = dados[key];
-    }
-    setRadioValue('referenciaAdmissao', dados.referenciaAdmissao);
-    getInput('macaRetirada').checked = dados.macaRetirada || false;
-    form.dataset.editando = index;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  window.copiar = index => {
-    const texto = montarTextoAvaliacao(avaliacoes[index]);
-    navigator.clipboard.writeText(texto).then(() => alert('Texto copiado com sucesso!'));
-  };
-
-  window.excluir = index => {
-    if (confirm('Deseja realmente excluir esta avaliação?')) {
-      avaliacoes.splice(index, 1);
-      salvarLocalStorage();
-      renderAvaliacoes();
-    }
-  };
-
-  window.visualizar = index => {
-    localStorage.setItem('avaliacao_visualizar', JSON.stringify(avaliacoes[index]));
-    window.open('visualizar.html', '_blank');
-  };
-
-  form.addEventListener('submit', e => {
-    e.preventDefault();
-    const dados = {
-      nome: getInput('nome').value,
-      documento: getInput('documento').value,
-      idade: getInput('idade').value,
-dataNascimento: getInput('dataNascimento').value,
-      endereco: getInput('endereco').value,
-      protocolo: getInput('protocolo').value,
-      pressao: getInput('pressao').value,
-      frequencia: getInput('frequencia').value,
-      saturacao: getInput('saturacao').value,
-      respiracao: getInput('respiracao').value,
-      glasgow: getInput('glasgow').value,
-      observacao: getInput('observacao').value,
-      medicoRegulador: getInput('medicoRegulador').value,
-      senha: getInput('senha').value,
-      unidadeSaude: getInput('unidadeSaude').value,
-      referenciaAdmissao: getRadioValue('referenciaAdmissao'),
-      nomeAdmitiu: getInput('nomeAdmitiu').value,
-      macaRetirada: getCheckbox('macaRetirada'),
-      prejPressao: getCheckbox('prejPressao'),
-      prejFrequencia: getCheckbox('prejFrequencia'),
-      prejSaturacao: getCheckbox('prejSaturacao'),
-      prejRespiracao: getCheckbox('prejRespiracao')
-    };
-
-    if (form.dataset.editando) {
-      avaliacoes[form.dataset.editando] = dados;
-      delete form.dataset.editando;
-    } else {
-      avaliacoes.push(dados);
-    }
-
-    salvarLocalStorage();
-    renderAvaliacoes();
-    limparFormulario();
-    mensagemSucesso.classList.remove('oculto');
-    setTimeout(() => mensagemSucesso.classList.add('oculto'), 2000);
-  });
-
-  campoPesquisa.addEventListener('input', renderAvaliacoes);
-  renderAvaliacoes();
-});
+}

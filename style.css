@@ -1,14 +1,6 @@
 body {
-  font-family: sans-serif;
-  margin: 0;
-  padding: 0;
-  background: #f2f2f2;
+  background-color: #f8f9fa;
 }
-
-#mensagem-sucesso {
+.oculto {
   display: none;
-}
-
-#mensagem-sucesso:not(.oculto) {
-  display: block;
 }
