@@ -174,7 +174,7 @@ if (campoIdade && campoDataNascimento) {
     e.preventDefault();
     const dados = {
       nome: getInput('nome').value,
-      documento: getInput('documento').value,
+      documento: getInput('documento').value.replace(/\D/g, ''),
       idade: getInput('idade').value,
 dataNascimento: getInput('dataNascimento').value,
       endereco: getInput('endereco').value,
